@@ -45,40 +45,40 @@ app.get("/drugs", async (req, res) => {
   }
 });
 
-// app.post("/drugs/add", async (req, res) => {
-//   try {
-//     const updateDrug = await Drug.findById(req.body.id);
-//     console.log(updateDrug);
-//     if (updateDrug) {
-//       updateDrug.quantity += req.body.quantity;
-//       await updateDrug.save();
-//       res.json(updateDrug);
-//     } else {
-//       res.status(400).json({
-//         message: "Bad request",
-//       });
-//     }
-//   } catch (error) {
-//     res.status(400).json({
-//       message: error.message,
-//     });
-
-//     if (req.body.quantity > updateDrug.quantity) {
-//       return res.status(400).json({
-//         message: "invalid quantity",
-//       });
-//     }
-//   }
-
-//   //   console.log(req.params);
-// });
-
-app.post("/drugs/remove", async (req, res) => {
+app.put("/drugs/add", async (req, res) => {
   try {
-    const removeDrug = await Drug.findById(req.body.id);
+    const updateDrug = await Drug.findById(req.body._id);
+    console.log(updateDrug);
+    if (updateDrug) {
+      updateDrug.quantity += req.body.quantity;
+      await updateDrug.save();
+      res.json(updateDrug);
+    } else {
+      res.status(400).json({
+        message: "Bad request",
+      });
+    }
+  } catch (error) {
+    res.status(400).json({
+      message: error.message,
+    });
+
+    if (req.body.quantity > updateDrug.quantity) {
+      return res.status(400).json({
+        message: "invalid quantity",
+      });
+    }
+  }
+
+  //   console.log(req.params);
+});
+
+app.put("/drugs/remove", async (req, res) => {
+  try {
+    const removeDrug = await Drug.findById(req.body._id);
     // console.log(removeDrug);
     if (removeDrug) {
-      removeDrug.quantity += req.body.quantity;
+      removeDrug.quantity -= req.body.quantity;
       await removeDrug.save();
       res.json(removeDrug);
     } else {
@@ -88,6 +88,16 @@ app.post("/drugs/remove", async (req, res) => {
     }
   } catch (error) {
     res.status(400).json({ message: error.message });
+  }
+});
+
+app.get("/drugs/quantity", async (req, res) => {
+  const findDrug = await Drug.findOne(req.query.name);
+  //   console.log(findDrug.quantity);
+  if (findDrug !== req.query.name) {
+    res.status(400).json({ message: "product isn't exist" });
+  } else {
+    res.json(findDrug.quantity);
   }
 });
 
