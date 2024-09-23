@@ -91,10 +91,11 @@ app.put("/drugs/remove", async (req, res) => {
   }
 });
 
-app.get("/drugs/quantity", async (req, res) => {
-  const findDrug = await Drug.findOne(req.query.name);
-  //   console.log(findDrug.quantity);
-  if (findDrug !== req.query.name) {
+app.get("/drugs/name", async (req, res) => {
+  const { name } = req.params;
+  const findDrug = await Drug.findOne({ name: name });
+  console.log(findDrug.quantity);
+  if (findDrug.length !== name.length) {
     res.status(400).json({ message: "product isn't exist" });
   } else {
     res.json(findDrug.quantity);
