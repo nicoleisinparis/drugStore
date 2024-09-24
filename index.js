@@ -91,14 +91,47 @@ app.put("/drugs/remove", async (req, res) => {
   }
 });
 
-app.get("/drugs/name", async (req, res) => {
-  const { name } = req.params;
-  const findDrug = await Drug.findOne({ name: name });
-  console.log(findDrug.quantity);
-  if (findDrug.length !== name.length) {
+// app.get("/drugs/quantity", async (req, res) => {
+//   const findDrug = await Drug.find(req.params.name);
+//   //   console.log(findDrug);
+//   if (findDrug) {
+//     res.status(400).json({ message: "product isn't exist" });
+//   } else {
+//     res.json(findDrug.quantity);
+//   }
+// });
+
+app.get("/drugs/quantity", async (req, res) => {
+  //   console.log(req.params.id);
+  try {
+    const qtyDrug = await Drug.findOne({
+      name: req.body.name,
+    });
+    //   console.log(qtyDrug);
+    const newQty = qtyDrug.quantity;
+    res.json(newQty);
+  } catch (error) {
     res.status(400).json({ message: "product isn't exist" });
-  } else {
-    res.json(findDrug.quantity);
+  }
+});
+
+// app.put("/drugs/:id", async (req, res) => {
+//   //   console.log(req.params.id);
+//   const modifDrug = await Drug.findOne({
+//     _id: req.params.id,
+//   });
+//   const newName = modifDrug.name;
+//   //   await newName.save();
+//   res.json(newName);
+// });
+
+app.delete("/drugs/:id", async (req, res) => {
+  try {
+    console.log(req.params.id);
+    await Drug.findByIdAndDelete(req.params.id);
+    res.json("item deleted");
+  } catch (error) {
+    res.status(400).json({ message: "product isn't exist" });
   }
 });
 
